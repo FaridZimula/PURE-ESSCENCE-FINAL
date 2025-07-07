@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Target, Heart, Star, Users, Leaf, Truck, ShieldCheck, Phone, Package, Smile } from 'lucide-react';
+import { ArrowRight, Target, Heart, Star, Users, Leaf, Truck, ShieldCheck, Phone, Package, Smile, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
@@ -20,29 +20,49 @@ const slides = [
     image: "/images/natural/9.jpg",
     title: "Premium Quality",
     description: "Experience luxury skincare at its finest"
+  },
+  {
+    image: "/images/natural/10.jpg",
+    title: "Organic Beauty",
+    description: "Transform your skin with nature's finest ingredients"
+  },
+  {
+    image: "/images/natural/11.jpg",
+    title: "Wellness & Care",
+    description: "Complete skincare solutions for every skin type"
   }
 ];
 
-const trendingEvents = [
+const promoImages = [
   {
     image: "/images/natural/26.jpg",
-    title: "Luxury Spa Day",
-    category: "Indoor"
+    title: "Special Offers",
+    subtitle: "Up to 50% Off",
+    description: "Limited time deals on premium products"
   },
   {
     image: "/images/natural/27.jpg",
-    title: "Beauty Workshop",
-    category: "Outdoor"
-  },
+    title: "New Arrivals",
+    subtitle: "Fresh Collection",
+    description: "Discover our latest skincare innovations"
+  }
+];
+
+const featureImages = [
   {
     image: "/images/natural/28.jpg",
-    title: "Skincare Masterclass",
-    category: "Indoor"
+    title: "Premium Skincare",
+    description: "Professional grade products for home use"
   },
   {
     image: "/images/natural/29.jpg",
-    title: "Wellness Retreat",
-    category: "Outdoor"
+    title: "Natural Wellness",
+    description: "Holistic approach to beauty and health"
+  },
+  {
+    image: "/images/natural/30.jpg",
+    title: "Expert Care",
+    description: "Trusted by skincare professionals worldwide"
   }
 ];
 
@@ -70,13 +90,50 @@ const testimonials = [
   }
 ];
 
+const features = [
+  {
+    icon: Leaf,
+    title: "100% Natural Ingredients",
+    description: "Pure, safe, and effective for all skin types.",
+    backDescription: "Our products are made with certified organic ingredients sourced from sustainable farms worldwide."
+  },
+  {
+    icon: Truck,
+    title: "Fast Delivery",
+    description: "Get your order quickly, wherever you are in Uganda.",
+    backDescription: "Same-day delivery in Kampala and 2-3 days nationwide with real-time tracking."
+  },
+  {
+    icon: ShieldCheck,
+    title: "Secure Payments",
+    description: "Your transactions are always safe and protected.",
+    backDescription: "Bank-level encryption and multiple payment options including mobile money and cards."
+  },
+  {
+    icon: Phone,
+    title: "Customer Support",
+    description: "Friendly help whenever you need it.",
+    backDescription: "24/7 WhatsApp support and expert skincare consultations available."
+  },
+  {
+    icon: Package,
+    title: "Eco-Friendly Packaging",
+    description: "We care for the planet as much as your skin.",
+    backDescription: "100% recyclable packaging made from biodegradable materials."
+  },
+  {
+    icon: Smile,
+    title: "Satisfaction Guarantee",
+    description: "We promise you'll love your purchase.",
+    backDescription: "30-day money-back guarantee and free product exchanges."
+  }
+];
+
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [currentTrending, setCurrentTrending] = useState(0);
   const { addToCart } = useCart();
 
   // Carousel refs for sliding
-  const trendingRef = useRef<HTMLDivElement>(null);
   const testimonialsRef = useRef<HTMLDivElement>(null);
 
   // State for current trending sales group
@@ -95,13 +152,8 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
 
-    const trendingTimer = setInterval(() => {
-      setCurrentTrending((prev) => (prev + 1) % trendingEvents.length);
-    }, 4000);
-
     return () => {
       clearInterval(timer);
-      clearInterval(trendingTimer);
     };
   }, []);
 
@@ -112,14 +164,6 @@ export default function Home() {
     }, 4000);
     return () => clearInterval(trendingSalesTimer);
   }, [trendingSalesGroups]);
-
-  // Scroll to group when currentTrendingSales changes
-  useEffect(() => {
-    if (trendingRef.current) {
-      const width = trendingRef.current.offsetWidth;
-      trendingRef.current.scrollTo({ left: width * currentTrendingSales, behavior: 'smooth' });
-    }
-  }, [currentTrendingSales]);
 
   useEffect(() => {
     if (vegRef.current) {
@@ -141,10 +185,18 @@ export default function Home() {
     }
   };
 
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
   return (
     <div className="pt-0">
-      {/* Hero Slider */}
-      <div className="relative h-screen min-h-[70vh] w-full overflow-hidden">
+      {/* Hero Slider with 5 rectangular images */}
+      <div className="relative h-[60vh] w-full overflow-hidden">
         {slides.map((slide, index) => (
           <motion.div
             key={index}
@@ -163,12 +215,12 @@ export default function Home() {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="text-center text-white px-[2cm]">
+              <div className="text-center text-white px-8">
                 <motion.h1
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="text-5xl font-bold mb-4"
+                  className="text-3xl md:text-5xl font-bold mb-4"
                 >
                   {slide.title}
                 </motion.h1>
@@ -176,7 +228,7 @@ export default function Home() {
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
-                  className="text-xl mb-8"
+                  className="text-lg md:text-xl mb-8"
                 >
                   {slide.description}
                 </motion.p>
@@ -197,50 +249,62 @@ export default function Home() {
             </div>
           </motion.div>
         ))}
+        
+        {/* Navigation arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        {/* Slide indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                currentSlide === index ? 'bg-[#f98203]' : 'bg-white/50'
+              }`}
+              onClick={() => setCurrentSlide(index)}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Our Trending Products slider - move to come first after hero slider */}
+      {/* Two rectangular promotional images */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-3xl font-bold text-center text-[#dd2581] mb-12">Our Trending Products</h2>
-        <div className="relative h-[400px] overflow-hidden rounded-2xl">
-          {trendingEvents.map((event, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {promoImages.map((promo, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0 }}
-              animate={{ 
-                opacity: currentTrending === index ? 1 : 0,
-                scale: currentTrending === index ? 1 : 1.1
-              }}
-              transition={{ duration: 1 }}
-              className="absolute inset-0"
-              style={{ display: currentTrending === index ? 'block' : 'none' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.2 }}
+              className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer"
             >
               <img
-                src={event.image}
-                alt={event.title}
-                className="w-full h-full object-cover"
+                src={promo.image}
+                alt={promo.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                <div className="absolute bottom-8 left-8">
-                  <span className="inline-block px-4 py-1 bg-[#f98203] text-white rounded-full mb-4">
-                    {event.category}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent">
+                <div className="absolute bottom-6 left-6">
+                  <span className="inline-block px-4 py-1 bg-[#f98203] text-white rounded-full mb-2 text-sm font-semibold">
+                    {promo.subtitle}
                   </span>
-                  <h3 className="text-3xl font-bold text-white">{event.title}</h3>
+                  <h3 className="text-2xl font-bold text-white mb-2">{promo.title}</h3>
+                  <p className="text-white/90">{promo.description}</p>
                 </div>
               </div>
             </motion.div>
           ))}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            {trendingEvents.map((_, index) => (
-              <button
-                key={index}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  currentTrending === index ? 'bg-[#f98203]' : 'bg-white/50'
-                }`}
-                onClick={() => setCurrentTrending(index)}
-              />
-            ))}
-          </div>
         </div>
       </section>
 
@@ -305,7 +369,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modern Features Section */}
+      {/* Three rectangular feature images */}
+      <section className="max-w-7xl mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {featureImages.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.2 }}
+              className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+            >
+              <img
+                src={feature.image}
+                alt={feature.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
+                <div className="absolute bottom-4 left-4">
+                  <h3 className="text-lg font-bold text-white mb-1">{feature.title}</h3>
+                  <p className="text-white/90 text-sm">{feature.description}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Modern Features Section with Flipping Cards */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -315,36 +406,30 @@ export default function Home() {
           Why Shop With Us?
         </motion.h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-            <Leaf className="h-10 w-10 text-[#dd2581] mb-4" />
-            <h3 className="font-semibold text-lg mb-2">100% Natural Ingredients</h3>
-            <p className="text-gray-600">Pure, safe, and effective for all skin types.</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-            <Truck className="h-10 w-10 text-[#f98203] mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Fast Delivery</h3>
-            <p className="text-gray-600">Get your order quickly, wherever you are in Uganda.</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-            <ShieldCheck className="h-10 w-10 text-[#dd2581] mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Secure Payments</h3>
-            <p className="text-gray-600">Your transactions are always safe and protected.</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-            <Phone className="h-10 w-10 text-[#f98203] mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Customer Support</h3>
-            <p className="text-gray-600">Friendly help whenever you need it.</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-            <Package className="h-10 w-10 text-[#dd2581] mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Eco-Friendly Packaging</h3>
-            <p className="text-gray-600">We care for the planet as much as your skin.</p>
-          </div>
-          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-            <Smile className="h-10 w-10 text-[#f98203] mb-4" />
-            <h3 className="font-semibold text-lg mb-2">Satisfaction Guarantee</h3>
-            <p className="text-gray-600">We promise you'll love your purchase.</p>
-          </div>
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="flip-card h-64"
+            >
+              <div className="flip-card-inner">
+                {/* Front of card */}
+                <div className="flip-card-front bg-gradient-to-br from-[#dd2581] to-[#f98203] text-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+                  <feature.icon className="h-12 w-12 mb-4" />
+                  <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                  <p className="text-white/90">{feature.description}</p>
+                </div>
+                {/* Back of card */}
+                <div className="flip-card-back bg-white border-2 border-[#dd2581] rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+                  <feature.icon className="h-12 w-12 text-[#f98203] mb-4" />
+                  <h3 className="font-semibold text-lg mb-2 text-[#dd2581]">{feature.title}</h3>
+                  <p className="text-gray-600">{feature.backDescription}</p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
