@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import ProductCard from '../components/ProductCard';
 import { naturalEssenceProducts } from '../data/NaturalEssenceProducts';
 import { classicProducts } from '../data/ClassicProducts';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 // Define categories for products
 const categories = {
@@ -14,13 +15,33 @@ const categories = {
   'Health Products': ['Wellness', 'Oral Care', 'General']
 };
 
+const promoSlides = [
+  {
+    image: "/images/natural/26.jpg"
+  },
+  {
+    image: "/images/natural/27.jpg"
+  }
+];
+
 export default function Products() {
   const [activeTab, setActiveTab] = useState<'natural' | 'classic'>('natural');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [currentPromoSlide, setCurrentPromoSlide] = useState(0);
+  const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   const allProducts = activeTab === 'natural' ? naturalEssenceProducts : classicProducts;
   
+  // Auto-slide for promo images
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentPromoSlide((prev) => (prev + 1) % promoSlides.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Filter products by category
   const filteredProducts = selectedCategory === 'All' 
     ? allProducts 
@@ -56,8 +77,18 @@ export default function Products() {
         return false;
       });
 
+  const handleAddToCart = (product: any) => {
+    addToCart({ ...product, quantity: 1 });
+    setAddedToCart(prev => ({ ...prev, [product.id]: true }));
+    
+    // Reset button after 2 seconds
+    setTimeout(() => {
+      setAddedToCart(prev => ({ ...prev, [product.id]: false }));
+    }, 2000);
+  };
+
   return (
-    <div className="pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="pt-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -66,95 +97,165 @@ export default function Products() {
         Our Products
       </motion.h1>
 
-      {/* Product Type Tabs */}
-      <div className="flex justify-center mb-8">
-        <button
-          onClick={() => setActiveTab('natural')}
-          className={`px-4 py-2 mx-2 rounded-t-lg transition-colors duration-200 text-sm sm:text-base ${activeTab === 'natural' ? 'bg-[#f98203] text-white' : 'bg-gray-200 text-black hover:bg-[#f98203] hover:text-white'}`}
-        >
-          Natural Essence
-        </button>
-        <button
-          onClick={() => setActiveTab('classic')}
-          className={`px-4 py-2 mx-2 rounded-t-lg transition-colors duration-200 text-sm sm:text-base ${activeTab === 'classic' ? 'bg-[#f98203] text-white' : 'bg-gray-200 text-black hover:bg-[#f98203] hover:text-white'}`}
-        >
-          Classic Products
-        </button>
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Left Sidebar - Categories */}
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-lg shadow-md p-6 sticky top-36">
+            <h3 className="text-lg font-semibold mb-4 text-[#dd2581]">Categories</h3>
+            <div className="space-y-2">
+              <button
+                onClick={() => setSelectedCategory('All')}
+                className={`w-full text-left px-4 py-2 rounded-md transition-colors duration-200 text-sm ${
+                  selectedCategory === 'All' 
+                    ? 'bg-[#dd2581] text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-[#f98203] hover:text-white'
+                }`}
+              >
+                All Products
+              </button>
+              {Object.keys(categories).map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`w-full text-left px-4 py-2 rounded-md transition-colors duration-200 text-sm ${
+                    selectedCategory === category 
+                      ? 'bg-[#dd2581] text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-[#f98203] hover:text-white'
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
 
-      {/* Category Filter */}
-      <div className="mb-8">
-        <h3 className="text-lg font-semibold mb-4 text-[#dd2581]">Shop by Category</h3>
-        <div className="flex flex-wrap gap-2 justify-center">
-          <button
-            onClick={() => setSelectedCategory('All')}
-            className={`px-4 py-2 rounded-full transition-colors duration-200 text-sm ${
-              selectedCategory === 'All' 
-                ? 'bg-[#dd2581] text-white' 
-                : 'bg-gray-200 text-gray-700 hover:bg-[#f98203] hover:text-white'
-            }`}
-          >
-            All Categories
-          </button>
-          {Object.keys(categories).map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full transition-colors duration-200 text-sm ${
-                selectedCategory === category 
-                  ? 'bg-[#dd2581] text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-[#f98203] hover:text-white'
-              }`}
-            >
-              {category}
-            </button>
-          ))}
+            {/* Product Type Tabs */}
+            <div className="mt-6">
+              <h4 className="text-md font-semibold mb-3 text-[#dd2581]">Product Type</h4>
+              <div className="space-y-2">
+                <button
+                  onClick={() => setActiveTab('natural')}
+                  className={`w-full px-4 py-2 rounded-md transition-colors duration-200 text-sm ${
+                    activeTab === 'natural' 
+                      ? 'bg-[#f98203] text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-[#f98203] hover:text-white'
+                  }`}
+                >
+                  Natural Essence
+                </button>
+                <button
+                  onClick={() => setActiveTab('classic')}
+                  className={`w-full px-4 py-2 rounded-md transition-colors duration-200 text-sm ${
+                    activeTab === 'classic' 
+                      ? 'bg-[#f98203] text-white' 
+                      : 'bg-gray-100 text-gray-700 hover:bg-[#f98203] hover:text-white'
+                  }`}
+                >
+                  Classic Products
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="lg:col-span-3">
+          {/* Promotional Slideshow */}
+          <div className="mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {promoSlides.map((slide, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ 
+                    opacity: currentPromoSlide === index ? 1 : 0.7,
+                    scale: currentPromoSlide === index ? 1 : 0.95
+                  }}
+                  transition={{ duration: 0.5 }}
+                  className="relative h-48 rounded-xl overflow-hidden"
+                >
+                  <img
+                    src={slide.image}
+                    alt={`Promo ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Products Count */}
+          <div className="mb-6">
+            <p className="text-gray-600">
+              Showing {filteredProducts.length} products
+              {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+            </p>
+          </div>
+          
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product, index) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+              >
+                <div className="relative">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-48 object-cover cursor-pointer"
+                    onClick={() => navigate(`/shop-detail/${product.id}`)}
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="bg-[#f98203] text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      {product.category}
+                    </span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <h3 
+                    className="text-xl font-bold text-gray-800 mb-2 cursor-pointer hover:text-[#dd2581] transition-colors"
+                    onClick={() => navigate(`/shop-detail/${product.id}`)}
+                  >
+                    {product.name}
+                  </h3>
+                  <p className="text-gray-600 mb-4 text-sm">{product.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-bold text-[#dd2581]">
+                      ${(product.price * 0.00027).toFixed(2)}
+                    </span>
+                    <button
+                      onClick={() => handleAddToCart(product)}
+                      className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
+                        addedToCart[product.id] 
+                          ? 'bg-[#dd2581] text-white' 
+                          : 'bg-[#dd2581] text-white hover:bg-[#f98203]'
+                      }`}
+                    >
+                      {addedToCart[product.id] ? 'Added!' : 'Add to Cart'}
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* No products message */}
+          {filteredProducts.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">No products found in this category.</p>
+              <button
+                onClick={() => setSelectedCategory('All')}
+                className="mt-4 px-6 py-2 bg-[#f98203] text-white rounded-full hover:bg-[#dd2581] transition-colors"
+              >
+                View All Products
+              </button>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Products Count */}
-      <div className="mb-6">
-        <p className="text-gray-600 text-center">
-          Showing {filteredProducts.length} products
-          {selectedCategory !== 'All' && ` in ${selectedCategory}`}
-        </p>
-      </div>
-      
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-        {filteredProducts.map((product, index) => (
-          <motion.div
-            key={product.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            onClick={() => navigate(`/shop-detail/${product.id}`)}
-            className="cursor-pointer"
-          >
-            <ProductCard
-              id={Number(product.id)}
-              name={product.name}
-              price={product.price}
-              image={product.image}
-              category={product.category}
-              rating={5}
-            />
-          </motion.div>
-        ))}
-      </div>
-
-      {/* No products message */}
-      {filteredProducts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">No products found in this category.</p>
-          <button
-            onClick={() => setSelectedCategory('All')}
-            className="mt-4 px-6 py-2 bg-[#f98203] text-white rounded-full hover:bg-[#dd2581] transition-colors"
-          >
-            View All Products
-          </button>
-        </div>
-      )}
     </div>
   );
 }

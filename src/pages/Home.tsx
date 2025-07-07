@@ -1,68 +1,34 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Target, Heart, Star, Users, Leaf, Truck, ShieldCheck, Phone, Package, Smile, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Leaf, Truck, ShieldCheck, Phone, Package, Smile } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 
 const slides = [
   {
-    image: "/images/natural/7.jpg",
-    title: "Pure Essence Skin Products",
-    description: "Discover natural beauty with our premium skincare collection"
+    image: "/images/natural/7.jpg"
   },
   {
-    image: "/images/natural/8.jpg",
-    title: "Natural Ingredients",
-    description: "Made with pure, organic ingredients for healthy skin"
+    image: "/images/natural/8.jpg"
   },
   {
-    image: "/images/natural/9.jpg",
-    title: "Premium Quality",
-    description: "Experience luxury skincare at its finest"
+    image: "/images/natural/9.jpg"
   },
   {
-    image: "/images/natural/10.jpg",
-    title: "Organic Beauty",
-    description: "Transform your skin with nature's finest ingredients"
+    image: "/images/natural/10.jpg"
   },
   {
-    image: "/images/natural/11.jpg",
-    title: "Wellness & Care",
-    description: "Complete skincare solutions for every skin type"
+    image: "/images/natural/11.jpg"
   }
 ];
 
 const promoImages = [
   {
-    image: "/images/natural/26.jpg",
-    title: "Special Offers",
-    subtitle: "Up to 50% Off",
-    description: "Limited time deals on premium products"
+    image: "/images/natural/26.jpg"
   },
   {
-    image: "/images/natural/27.jpg",
-    title: "New Arrivals",
-    subtitle: "Fresh Collection",
-    description: "Discover our latest skincare innovations"
-  }
-];
-
-const featureImages = [
-  {
-    image: "/images/natural/28.jpg",
-    title: "Premium Skincare",
-    description: "Professional grade products for home use"
-  },
-  {
-    image: "/images/natural/29.jpg",
-    title: "Natural Wellness",
-    description: "Holistic approach to beauty and health"
-  },
-  {
-    image: "/images/natural/30.jpg",
-    title: "Expert Care",
-    description: "Trusted by skincare professionals worldwide"
+    image: "/images/natural/27.jpg"
   }
 ];
 
@@ -132,14 +98,10 @@ const features = [
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { addToCart } = useCart();
+  const [addedToCart, setAddedToCart] = useState<{[key: string]: boolean}>({});
 
   // Carousel refs for sliding
   const testimonialsRef = useRef<HTMLDivElement>(null);
-
-  // State for current trending sales group
-  const [currentTrendingSales, setCurrentTrendingSales] = useState(0);
-  const bestsellersPerView = 3; // Number of cards visible at once
-  const trendingSalesGroups = Math.ceil(products.length / bestsellersPerView);
 
   // Trending Sales (Vegetable Carousel Style)
   const [vegSlide, setVegSlide] = useState(0);
@@ -156,14 +118,6 @@ export default function Home() {
       clearInterval(timer);
     };
   }, []);
-
-  // Update auto-scroll to use group index
-  useEffect(() => {
-    const trendingSalesTimer = setInterval(() => {
-      setCurrentTrendingSales((prev) => (prev + 1) % trendingSalesGroups);
-    }, 4000);
-    return () => clearInterval(trendingSalesTimer);
-  }, [trendingSalesGroups]);
 
   useEffect(() => {
     if (vegRef.current) {
@@ -185,84 +139,32 @@ export default function Home() {
     }
   };
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const handleAddToCart = (product: any) => {
+    addToCart({ ...product, quantity: 1 });
+    setAddedToCart(prev => ({ ...prev, [product.id]: true }));
+    
+    // Reset button after 2 seconds
+    setTimeout(() => {
+      setAddedToCart(prev => ({ ...prev, [product.id]: false }));
+    }, 2000);
   };
 
   return (
     <div className="pt-0">
-      {/* Hero Slider with 5 rectangular images */}
+      {/* Hero Slider - Clean images sliding left */}
       <div className="relative h-[60vh] w-full overflow-hidden">
-        {slides.map((slide, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0 }}
-            animate={{ 
-              opacity: currentSlide === index ? 1 : 0,
-              scale: currentSlide === index ? 1 : 1.1
-            }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0"
-            style={{ display: currentSlide === index ? 'block' : 'none' }}
-          >
-            <img
-              src={slide.image}
-              alt={slide.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="text-center text-white px-8">
-                <motion.h1
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-3xl md:text-5xl font-bold mb-4"
-                >
-                  {slide.title}
-                </motion.h1>
-                <motion.p
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-lg md:text-xl mb-8"
-                >
-                  {slide.description}
-                </motion.p>
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <Link
-                    to="/products"
-                    className="bg-[#f98203] text-white px-8 py-3 rounded-full inline-flex items-center hover:bg-[#dd2581] transition-colors"
-                  >
-                    Shop Now
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </motion.div>
-              </div>
+        <div className="flex transition-transform duration-1000 ease-in-out h-full"
+             style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+          {slides.map((slide, index) => (
+            <div key={index} className="min-w-full h-full">
+              <img
+                src={slide.image}
+                alt={`Slide ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
             </div>
-          </motion.div>
-        ))}
-        
-        {/* Navigation arrows */}
-        <button
-          onClick={prevSlide}
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
-        >
-          <ChevronLeft className="h-6 w-6" />
-        </button>
-        <button
-          onClick={nextSlide}
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
-        >
-          <ChevronRight className="h-6 w-6" />
-        </button>
+          ))}
+        </div>
 
         {/* Slide indicators */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -278,7 +180,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Two rectangular promotional images */}
+      {/* Two rectangular promotional images - Clean without text */}
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {promoImages.map((promo, index) => (
@@ -291,24 +193,15 @@ export default function Home() {
             >
               <img
                 src={promo.image}
-                alt={promo.title}
+                alt={`Promo ${index + 1}`}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent">
-                <div className="absolute bottom-6 left-6">
-                  <span className="inline-block px-4 py-1 bg-[#f98203] text-white rounded-full mb-2 text-sm font-semibold">
-                    {promo.subtitle}
-                  </span>
-                  <h3 className="text-2xl font-bold text-white mb-2">{promo.title}</h3>
-                  <p className="text-white/90">{promo.description}</p>
-                </div>
-              </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Trending Sales (Vegetable Carousel Style) */}
+      {/* Trending Sales with USD currency and orange/pink buttons */}
       <section className="container mx-auto py-16">
         <h2 className="text-3xl font-bold mb-0 text-[#dd2581] text-center">Trending Sales</h2>
         <div className="flex justify-center mt-8">
@@ -341,14 +234,20 @@ export default function Home() {
                   <p className="text-gray-600 mb-4">{product.description}</p>
                   <div className="flex justify-between items-center mt-auto">
                     <p className="text-[#f98203] text-lg font-bold mb-0">
-                      {product.price.toLocaleString('en-UG', { style: 'currency', currency: 'UGX', minimumFractionDigits: 0 }).replace('UGX', 'UGX')}
+                      ${(product.price * 0.00027).toFixed(2)}
                     </p>
                     <button
-                      onClick={() => addToCart({ ...product, quantity: 1 })}
-                      className="btn border border-[#dd2581] rounded-full px-4 py-2 text-[#dd2581] flex items-center hover:bg-[#dd2581] hover:text-white transition-colors"
+                      onClick={() => handleAddToCart(product)}
+                      className={`btn border rounded-full px-4 py-2 flex items-center transition-all duration-300 ${
+                        addedToCart[product.id] 
+                          ? 'bg-[#dd2581] text-white border-[#dd2581]' 
+                          : 'bg-[#f98203] text-white border-[#f98203] hover:bg-[#dd2581] hover:border-[#dd2581]'
+                      }`}
                     >
-                      <svg className="h-5 w-5 mr-2 text-[#dd2581] group-hover:text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v3m4 0H9" /></svg>
-                      Add to cart
+                      <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v3m4 0H9" />
+                      </svg>
+                      {addedToCart[product.id] ? 'Added!' : 'Add to cart'}
                     </button>
                   </div>
                 </div>
@@ -369,35 +268,49 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Three rectangular feature images */}
+      {/* Three images in 2+1 layout */}
       <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featureImages.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2 }}
-              className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
-            >
-              <img
-                src={feature.image}
-                alt={feature.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                <div className="absolute bottom-4 left-4">
-                  <h3 className="text-lg font-bold text-white mb-1">{feature.title}</h3>
-                  <p className="text-white/90 text-sm">{feature.description}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+          >
+            <img
+              src="/images/natural/28.jpg"
+              alt="Feature 1"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+          >
+            <img
+              src="/images/natural/29.jpg"
+              alt="Feature 2"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+          </motion.div>
         </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+        >
+          <img
+            src="/images/natural/30.jpg"
+            alt="Feature 3"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </motion.div>
       </section>
 
-      {/* Modern Features Section with Flipping Cards */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
+      {/* Why Shop With Us - Pink front, Orange back, no gradient */}
+      <section id="why-shop-with-us" className="max-w-7xl mx-auto px-4 py-16">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -415,17 +328,17 @@ export default function Home() {
               className="flip-card h-64"
             >
               <div className="flip-card-inner">
-                {/* Front of card */}
-                <div className="flip-card-front bg-gradient-to-br from-[#dd2581] to-[#f98203] text-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+                {/* Front of card - Pink */}
+                <div className="flip-card-front bg-[#dd2581] text-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
                   <feature.icon className="h-12 w-12 mb-4" />
                   <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
                   <p className="text-white/90">{feature.description}</p>
                 </div>
-                {/* Back of card */}
-                <div className="flip-card-back bg-white border-2 border-[#dd2581] rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
-                  <feature.icon className="h-12 w-12 text-[#f98203] mb-4" />
-                  <h3 className="font-semibold text-lg mb-2 text-[#dd2581]">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.backDescription}</p>
+                {/* Back of card - Orange */}
+                <div className="flip-card-back bg-[#f98203] text-white rounded-xl shadow-lg p-8 flex flex-col items-center text-center">
+                  <feature.icon className="h-12 w-12 mb-4" />
+                  <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                  <p className="text-white/90">{feature.backDescription}</p>
                 </div>
               </div>
             </motion.div>

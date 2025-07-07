@@ -5,6 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 
+const categories = [
+  'Skin Products',
+  'Lotions', 
+  'Bedroom Products',
+  'Tablets',
+  'Health Products'
+];
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -32,179 +40,200 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-[#dd2581] fixed top-0 left-0 right-0 w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo and Brand */}
-          <motion.div
-            className="flex items-center"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <Link to="/" className="flex items-center group">
-              <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
-              >
-                <img
-                  src="/images/logo.png"
-                  alt="Logo"
-                  className="h-8 w-auto sm:h-10"
-                />
-              </motion.div>
-              <span className="ml-2 text-lg sm:text-xl font-extrabold tracking-tight text-white group-hover:text-[#f98203] transition-colors select-none">Pure Essence</span>
-            </Link>
-          </motion.div>
-          
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              {['Home', 'Products', 'Help', 'Contact'].map((item, index) => (
+    <>
+      <nav className="bg-[#dd2581] fixed top-0 left-0 right-0 w-full z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo and Brand */}
+            <motion.div
+              className="flex items-center"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <Link to="/" className="flex items-center group">
                 <motion.div
-                  key={item}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.5 }}
                 >
+                  <img
+                    src="/images/logo.png"
+                    alt="Logo"
+                    className="h-8 w-auto sm:h-10"
+                  />
+                </motion.div>
+                <span className="ml-2 text-lg sm:text-xl font-extrabold tracking-tight text-white group-hover:text-[#f98203] transition-colors select-none">Pure Essence</span>
+              </Link>
+            </motion.div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                {['Home', 'Products', 'Help', 'Contact'].map((item, index) => (
+                  <motion.div
+                    key={item}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Link
+                      to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                      className={`text-white px-3 py-2 rounded-md text-sm transition-colors ${
+                        isActive(item) ? 'bg-[#f98203]' : 'hover:bg-[#f98203]'
+                      }`}
+                    >
+                      {item}
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="text-white hover:text-[#f98203] transition-colors p-2"
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" />
+              </motion.button>
+              <Link to="/cart" className="relative text-white hover:text-[#f98203] transition-colors p-2" aria-label="Cart">
+                <ShoppingBag className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#f98203] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="md:hidden flex items-center space-x-2">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="text-white hover:text-[#f98203] transition-colors p-2"
+                aria-label="Search"
+              >
+                <Search className="h-5 w-5" />
+              </motion.button>
+              <Link to="/cart" className="relative text-white hover:text-[#f98203] transition-colors p-2" aria-label="Cart">
+                <ShoppingBag className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#f98203] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-white hover:text-[#f98203] transition-colors p-2"
+                aria-label="Menu"
+              >
+                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {isSearchOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="border-t border-[#f98203]/20"
+            >
+              <div className="max-w-7xl mx-auto px-4 py-3">
+                <input
+                  type="search"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="w-full px-4 py-2 rounded-md bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-[#f98203]"
+                  autoFocus
+                />
+                {searchResults.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute left-0 right-0 mt-2 mx-4 bg-white rounded-md shadow-lg overflow-hidden z-50"
+                  >
+                    <div className="max-h-64 overflow-y-auto">
+                      {searchResults.map((product) => (
+                        <Link
+                          key={product.id}
+                          to={`/products`}
+                          onClick={() => {
+                            setIsSearchOpen(false);
+                            setSearchQuery('');
+                            setSearchResults([]);
+                          }}
+                          className="flex items-center p-4 hover:bg-gray-50"
+                        >
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-12 h-12 object-cover rounded"
+                          />
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                            <div className="text-sm text-gray-500">{product.category}</div>
+                          </div>
+                          <div className="ml-auto text-sm font-medium text-[#dd2581]">
+                            ${(product.price * 0.00027).toFixed(2)}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {isOpen && (
+            <motion.div
+              className="md:hidden fixed inset-0 top-16 bg-[#dd2581] shadow-lg overflow-y-auto"
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+            >
+              <div className="px-4 pt-4 pb-6 space-y-2">
+                {['Home', 'Products', 'Help', 'Contact', 'Cart'].map((item) => (
                   <Link
+                    key={item}
                     to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                    className={`text-white px-3 py-2 rounded-md text-sm transition-colors ${
+                    className={`text-white block px-4 py-3 rounded-md text-lg transition-colors ${
                       isActive(item) ? 'bg-[#f98203]' : 'hover:bg-[#f98203]'
                     }`}
+                    onClick={() => setIsOpen(false)}
                   >
                     {item}
                   </Link>
-                </motion.div>
-              ))}
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="text-white hover:text-[#f98203] transition-colors p-2"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </motion.button>
-            <Link to="/cart" className="relative text-white hover:text-[#f98203] transition-colors p-2" aria-label="Cart">
-              <ShoppingBag className="h-5 w-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#f98203] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
 
-          {/* Mobile Navigation */}
-          <div className="md:hidden flex items-center space-x-2">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="text-white hover:text-[#f98203] transition-colors p-2"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </motion.button>
-            <Link to="/cart" className="relative text-white hover:text-[#f98203] transition-colors p-2" aria-label="Cart">
-              <ShoppingBag className="h-5 w-5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#f98203] text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-[#f98203] transition-colors p-2"
-              aria-label="Menu"
-            >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {isSearchOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="border-t border-[#f98203]/20"
-          >
-            <div className="max-w-7xl mx-auto px-4 py-3">
-              <input
-                type="search"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="w-full px-4 py-2 rounded-md bg-white/10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-[#f98203]"
-                autoFocus
-              />
-              {searchResults.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute left-0 right-0 mt-2 mx-4 bg-white rounded-md shadow-lg overflow-hidden z-50"
-                >
-                  <div className="max-h-64 overflow-y-auto">
-                    {searchResults.map((product) => (
-                      <Link
-                        key={product.id}
-                        to={`/products`}
-                        onClick={() => {
-                          setIsSearchOpen(false);
-                          setSearchQuery('');
-                          setSearchResults([]);
-                        }}
-                        className="flex items-center p-4 hover:bg-gray-50"
-                      >
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-12 h-12 object-cover rounded"
-                        />
-                        <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                          <div className="text-sm text-gray-500">{product.category}</div>
-                        </div>
-                        <div className="ml-auto text-sm font-medium text-[#dd2581]">
-                          ${product.price}
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {isOpen && (
-          <motion.div
-            className="md:hidden fixed inset-0 top-16 bg-[#dd2581] shadow-lg overflow-y-auto"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'tween', duration: 0.3 }}
-          >
-            <div className="px-4 pt-4 pb-6 space-y-2">
-              {['Home', 'Products', 'Help', 'Contact', 'Cart'].map((item) => (
+      {/* Categories Bar */}
+      <div className="bg-white shadow-sm border-b border-gray-200 fixed top-16 left-0 right-0 w-full z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-center py-3 overflow-x-auto">
+            <div className="flex space-x-6 min-w-max">
+              {categories.map((category) => (
                 <Link
-                  key={item}
-                  to={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
-                  className={`text-white block px-4 py-3 rounded-md text-lg transition-colors ${
-                    isActive(item) ? 'bg-[#f98203]' : 'hover:bg-[#f98203]'
-                  }`}
-                  onClick={() => setIsOpen(false)}
+                  key={category}
+                  to="/products"
+                  className="text-gray-700 hover:text-[#dd2581] transition-colors text-sm font-medium whitespace-nowrap"
                 >
-                  {item}
+                  {category}
                 </Link>
               ))}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

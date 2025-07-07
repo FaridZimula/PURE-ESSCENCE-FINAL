@@ -1,50 +1,17 @@
 import React from 'react';
-import { Facebook, Twitter, Instagram, Youtube, Linkedin } from 'lucide-react';
+import { Facebook, Twitter, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+// TikTok icon component
+const TikTokIcon = () => (
+  <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+  </svg>
+);
 
 export default function Footer() {
   return (
     <footer className="bg-[#dd2581] text-white pt-0 pb-0 mt-20 w-full">
-      {/* Newsletter Signup Bar */}
-      <div className="max-w-7xl mx-auto px-4 py-8 border-b border-white/30">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <div className="flex items-center">
-              <img src="/images/logo.png" alt="Pure Essence Logo" className="h-10 w-10 sm:h-12 sm:w-12 mr-3" />
-              <span className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white">Pure Essence</span>
-            </div>
-            <div className="text-base sm:text-lg text-[#f98203] font-semibold mt-1">Natural Skincare Products</div>
-          </div>
-          
-          <form className="w-full md:w-auto flex flex-col sm:flex-row gap-2">
-          <input
-            type="email"
-            placeholder="Your Email"
-              className="w-full sm:w-64 px-4 py-3 rounded-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#f98203] text-base"
-            required
-          />
-          <button
-            type="submit"
-              className="w-full sm:w-auto bg-[#f98203] hover:bg-white hover:text-[#dd2581] text-white px-6 py-3 rounded-full text-base font-bold transition-colors whitespace-nowrap"
-          >
-            Subscribe Now
-          </button>
-        </form>
-
-          <div className="flex space-x-3 sm:space-x-4">
-          {[Twitter, Facebook, Youtube, Linkedin].map((Icon, idx) => (
-            <a
-              key={idx}
-              href="#"
-                className="border border-white rounded-full p-2 sm:p-3 bg-transparent text-white hover:bg-white hover:text-[#dd2581] transition-colors"
-              aria-label={Icon.name}
-            >
-                <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-            </a>
-          ))}
-          </div>
-        </div>
-      </div>
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-white/30 text-center md:text-left">
         {/* Why People Love Us */}
@@ -53,7 +20,12 @@ export default function Footer() {
           <p className="text-white/80 mb-6">
             Pure Essence is dedicated to providing natural, safe, and effective skincare products. Our customers love our commitment to quality, sustainability, and real results.
           </p>
-          <button className="border border-white text-[#f98203] px-8 py-2 rounded-full font-semibold hover:bg-[#f98203] hover:text-white transition-colors">Read More</button>
+          <Link 
+            to="/#why-shop-with-us"
+            className="border border-white text-[#f98203] px-8 py-2 rounded-full font-semibold hover:bg-[#f98203] hover:text-white transition-colors"
+          >
+            Read More
+          </Link>
         </div>
         {/* Shop Info */}
         <div>
@@ -86,16 +58,34 @@ export default function Footer() {
             <li>Address: 123 Beauty Street, Skincare City</li>
             <li>Email: contact@puressence.com</li>
             <li>Phone: +256 776 203 930</li>
-            <li>Payment Accepted</li>
-            <li className="flex space-x-2 mt-2 justify-center md:justify-start">
-              <img src="/images/payments/visa.png" alt="Visa" className="h-8" />
-              <img src="/images/payments/mastercard.png" alt="Mastercard" className="h-8" />
-              <img src="/images/payments/maestro.png" alt="Maestro" className="h-8" />
-              <img src="/images/payments/paypal.png" alt="Paypal" className="h-8" />
-            </li>
           </ul>
+          
+          {/* Social Media Links */}
+          <div className="mt-6">
+            <h4 className="text-lg font-semibold mb-3">Follow Us</h4>
+            <div className="flex space-x-3 sm:space-x-4 justify-center md:justify-start">
+              {[
+                { Icon: Twitter, href: "#", name: "Twitter" },
+                { Icon: Facebook, href: "#", name: "Facebook" },
+                { Icon: MessageCircle, href: "https://wa.me/256754507334", name: "WhatsApp" },
+                { Icon: TikTokIcon, href: "#", name: "TikTok" }
+              ].map(({ Icon, href, name }, idx) => (
+                <a
+                  key={idx}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-white rounded-full p-2 sm:p-3 bg-transparent text-white hover:bg-white hover:text-[#dd2581] transition-colors"
+                  aria-label={name}
+                >
+                  <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+      
       {/* Copyright Bar */}
       <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 py-6 text-white/80 text-sm text-center md:text-left">
         <div>
