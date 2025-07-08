@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Menu, X, ShoppingBag, Search } from 'lucide-react';
+import { Menu, X, ShoppingBag, Search, ChevronDown } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 
 const categories = [
+  'All Categories',
   'Skin Products',
   'Lotions', 
   'Bedroom Products',
@@ -18,6 +19,7 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<typeof products>([]);
+  const [showCategoriesDropdown, setShowCategoriesDropdown] = useState(false);
   const location = useLocation();
   const { cartCount } = useCart();
 
@@ -210,18 +212,62 @@ export default function Navbar() {
                     {item}
                   </Link>
                 ))}
+                
+                {/* Mobile Categories */}
+                <div className="border-t border-white/20 pt-4 mt-4">
+                  <h3 className="text-white font-semibold mb-2">Categories</h3>
+                  {categories.map((category) => (
+                    <Link
+                      key={category}
+                      to="/products"
+                      className={`text-white block px-4 py-2 rounded-md transition-colors hover:bg-[#f98203] ${
+                        category === 'All Categories' ? 'text-[#f98203] font-semibold' : ''
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {category}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </nav>
 
-      {/* Categories Bar */}
-      <div className="bg-white shadow-sm border-b border-gray-200 fixed top-16 left-0 right-0 w-full z-40">
+      {/* Categories Bar - Desktop Only */}
+      <div className="bg-white shadow-sm border-b border-gray-200 fixed top-16 left-0 right-0 w-full z-40 hidden md:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-center py-3 overflow-x-auto">
             <div className="flex space-x-6 min-w-max">
-              {categories.map((category) => (
+              {/* All Categories with Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowCategoriesDropdown(!showCategoriesDropdown)}
+                  className="flex items-center text-[#dd2581] hover:text-[#f98203] transition-colors text-sm font-medium whitespace-nowrap"
+                >
+                  All Categories
+                  <ChevronDown className="ml-1 h-4 w-4 text-[#dd2581]" />
+                </button>
+                
+                {showCategoriesDropdown && (
+                  <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px]">
+                    {categories.slice(1).map((category) => (
+                      <Link
+                        key={category}
+                        to="/products"
+                        className="block px-4 py-2 text-gray-700 hover:bg-[#f98203] hover:text-white transition-colors"
+                        onClick={() => setShowCategoriesDropdown(false)}
+                      >
+                        {category}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              {/* Other Categories */}
+              {categories.slice(1).map((category) => (
                 <Link
                   key={category}
                   to="/products"

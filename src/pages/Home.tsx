@@ -32,6 +32,39 @@ const promoImages = [
   }
 ];
 
+const categoryProducts = [
+  {
+    category: 'Skin Products',
+    image: '/images/natural/23.jpg',
+    product: products[2] // Face Serum
+  },
+  {
+    category: 'Lotions',
+    image: '/images/natural/24.jpg',
+    product: products[3] // Body Lotion
+  },
+  {
+    category: 'Health Products',
+    image: '/images/natural/15.jpg',
+    product: products[14] // Slimming Tea
+  },
+  {
+    category: 'Tablets',
+    image: '/images/natural/16.jpg',
+    product: products[15] // Moisturizer
+  },
+  {
+    category: 'Bedroom Products',
+    image: '/images/natural/17.jpg',
+    product: products[16] // Facial Cleanser
+  },
+  {
+    category: 'Body Care',
+    image: '/images/natural/18.jpg',
+    product: products[17] // Body Oil
+  }
+];
+
 const testimonials = [
   {
     name: 'Sarah K.',
@@ -102,12 +135,7 @@ export default function Home() {
 
   // Carousel refs for sliding
   const testimonialsRef = useRef<HTMLDivElement>(null);
-
-  // Trending Sales (Vegetable Carousel Style)
-  const [vegSlide, setVegSlide] = useState(0);
-  const vegPerView = 3;
-  const vegGroups = Math.ceil(products.length / vegPerView);
-  const vegRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -118,18 +146,6 @@ export default function Home() {
       clearInterval(timer);
     };
   }, []);
-
-  useEffect(() => {
-    if (vegRef.current) {
-      const width = vegRef.current.offsetWidth;
-      vegRef.current.scrollTo({ left: width * vegSlide, behavior: 'smooth' });
-    }
-  }, [vegSlide]);
-
-  // Get top 4 bestsellers (by price as a proxy)
-  const bestsellers = [...products]
-    .sort((a, b) => b.price - a.price)
-    .slice(0, 4);
 
   // Carousel navigation handlers
   const scrollCarousel = (ref: React.RefObject<HTMLDivElement>, dir: number) => {
@@ -201,70 +217,62 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trending Sales with USD currency and orange/pink buttons */}
+      {/* Shop By Category Section */}
       <section className="container mx-auto py-16">
-        <h2 className="text-3xl font-bold mb-0 text-[#dd2581] text-center">Trending Sales</h2>
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-[#dd2581] text-center flex-1">Shop by Category</h2>
+          <Link 
+            to="/products" 
+            className="text-gray-600 hover:text-[#dd2581] transition-colors border border-gray-300 px-4 py-2 rounded-full"
+          >
+            View More
+          </Link>
+        </div>
+        
+        <div className="relative">
+          <button
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2 hover:bg-[#dd2581] hover:text-white"
+            onClick={() => scrollCarousel(categoryRef, -1)}
+            aria-label="Scroll left"
+          >
+            &#8592;
+          </button>
+          
           <div
-            ref={vegRef}
-            className="flex gap-8 overflow-x-auto scroll-smooth snap-x snap-mandatory w-full px-2"
+            ref={categoryRef}
+            className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
             style={{ scrollSnapType: 'x mandatory' }}
           >
-            {bestsellers.map((product, idx) => (
+            {categoryProducts.map((item, idx) => (
               <div
-                key={product.id}
-                className="border border-[#f98203] rounded-xl bg-white position-relative min-w-[320px] max-w-xs vesitable-item snap-center transition duration-500 hover:shadow-2xl flex flex-col"
-                style={{ position: 'relative', height: '100%' }}
+                key={idx}
+                className="min-w-[280px] max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden snap-center hover:shadow-xl transition-shadow"
               >
-                <div className="vesitable-img overflow-hidden rounded-t-xl" style={{ borderRadius: '10px 10px 0 0' }}>
+                <div className="relative h-48">
                   <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-48 object-cover transition-transform duration-500 hover:scale-110 rounded-t-xl"
+                    src={item.image}
+                    alt={item.category}
+                    className="w-full h-full object-cover"
                   />
                 </div>
-                <div
-                  className="text-white bg-[#dd2581] px-3 py-1 rounded position-absolute"
-                  style={{ position: 'absolute', top: 10, right: 10 }}
-                >
-                  Bestseller
-                </div>
-                <div className="p-4 rounded-b-xl flex flex-col flex-1">
-                  <h4 className="text-xl font-bold mb-2 text-[#dd2581]">{product.name}</h4>
-                  <p className="text-gray-600 mb-4">{product.description}</p>
-                  <div className="flex justify-between items-center mt-auto">
-                    <p className="text-[#f98203] text-lg font-bold mb-0">
-                      ${(product.price * 0.00027).toFixed(2)}
-                    </p>
-                    <button
-                      onClick={() => handleAddToCart(product)}
-                      className={`btn border rounded-full px-4 py-2 flex items-center transition-all duration-300 ${
-                        addedToCart[product.id] 
-                          ? 'bg-[#dd2581] text-white border-[#dd2581]' 
-                          : 'bg-[#f98203] text-white border-[#f98203] hover:bg-[#dd2581] hover:border-[#dd2581]'
-                      }`}
-                    >
-                      <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m13-9l2 9m-5-9V6a2 2 0 10-4 0v3m4 0H9" />
-                      </svg>
-                      {addedToCart[product.id] ? 'Added!' : 'Add to cart'}
-                    </button>
-                  </div>
+                <div className="p-6 text-center">
+                  <h3 className="text-lg font-bold text-[#dd2581] mb-2">{item.category}</h3>
+                  <p className="text-gray-600 text-sm mb-4">{item.product.name}</p>
+                  <p className="text-[#f98203] font-bold text-lg">
+                    ${(item.product.price * 0.00027).toFixed(2)}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-        {/* Dots for slider control */}
-        <div className="flex justify-center mt-6">
-          {Array.from({ length: vegGroups }).map((_, idx) => (
-            <button
-              key={idx}
-              className={`w-3 h-3 rounded-full mx-1 transition-colors ${vegSlide === idx ? 'bg-[#f98203]' : 'bg-gray-300'}`}
-              onClick={() => setVegSlide(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
+          
+          <button
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2 hover:bg-[#dd2581] hover:text-white"
+            onClick={() => scrollCarousel(categoryRef, 1)}
+            aria-label="Scroll right"
+          >
+            &#8594;
+          </button>
         </div>
       </section>
 

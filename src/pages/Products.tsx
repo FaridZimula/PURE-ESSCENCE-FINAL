@@ -89,6 +89,35 @@ export default function Products() {
 
   return (
     <div className="pt-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Full Width Hero Image */}
+      <div className="relative h-[300px] w-screen -mx-4 sm:-mx-6 lg:-mx-8 mb-8 overflow-hidden">
+        <div className="flex transition-transform duration-1000 ease-in-out h-full"
+             style={{ transform: `translateX(-${currentPromoSlide * 100}%)` }}>
+          {promoSlides.map((slide, index) => (
+            <div key={index} className="min-w-full h-full">
+              <img
+                src={slide.image}
+                alt={`Promo ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+        </div>
+        
+        {/* Slide indicators */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {promoSlides.map((_, index) => (
+            <button
+              key={index}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                currentPromoSlide === index ? 'bg-[#f98203]' : 'bg-white/50'
+              }`}
+              onClick={() => setCurrentPromoSlide(index)}
+            />
+          ))}
+        </div>
+      </div>
+
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -159,30 +188,6 @@ export default function Products() {
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          {/* Promotional Slideshow */}
-          <div className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {promoSlides.map((slide, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0 }}
-                  animate={{ 
-                    opacity: currentPromoSlide === index ? 1 : 0.7,
-                    scale: currentPromoSlide === index ? 1 : 0.95
-                  }}
-                  transition={{ duration: 0.5 }}
-                  className="relative h-48 rounded-xl overflow-hidden"
-                >
-                  <img
-                    src={slide.image}
-                    alt={`Promo ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
           {/* Products Count */}
           <div className="mb-6">
             <p className="text-gray-600">
@@ -199,13 +204,13 @@ export default function Products() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow h-[400px] flex flex-col"
               >
-                <div className="relative">
+                <div className="relative h-48">
                   <img 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-48 object-cover cursor-pointer"
+                    className="w-full h-full object-cover cursor-pointer"
                     onClick={() => navigate(`/shop-detail/${product.id}`)}
                   />
                   <div className="absolute top-4 left-4">
@@ -214,15 +219,15 @@ export default function Products() {
                     </span>
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-6 flex flex-col flex-1">
                   <h3 
                     className="text-xl font-bold text-gray-800 mb-2 cursor-pointer hover:text-[#dd2581] transition-colors"
                     onClick={() => navigate(`/shop-detail/${product.id}`)}
                   >
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 mb-4 text-sm">{product.description}</p>
-                  <div className="flex items-center justify-between">
+                  <p className="text-gray-600 mb-4 text-sm flex-1">{product.description}</p>
+                  <div className="flex items-center justify-between mt-auto">
                     <span className="text-2xl font-bold text-[#dd2581]">
                       ${(product.price * 0.00027).toFixed(2)}
                     </span>

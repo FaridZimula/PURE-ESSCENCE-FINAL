@@ -15,6 +15,10 @@ import Checkout from './pages/Checkout';
 import ShopDetail from './pages/ShopDetail';
 import ScrollToTop from './components/ScrollToTop';
 import Help from './pages/Help';
+import Shipping from './pages/help/Shipping';
+import Returns from './pages/help/Returns';
+import Payments from './pages/help/Payments';
+import ProductCare from './pages/help/ProductCare';
 
 function App() {
   return (
@@ -33,6 +37,10 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/login" element={<LoginForm />} />
                 <Route path="/help" element={<Help />} />
+                <Route path="/help/shipping" element={<Shipping />} />
+                <Route path="/help/returns" element={<Returns />} />
+                <Route path="/help/payments" element={<Payments />} />
+                <Route path="/help/product-care" element={<ProductCare />} />
               <Route path="/register" element={
                   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
                   <RegistrationForm />

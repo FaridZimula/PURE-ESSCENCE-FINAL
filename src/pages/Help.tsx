@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Phone, Mail, MessageCircle, Truck, ShieldCheck, CreditCard, Package } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const faqs = [
   {
@@ -43,6 +44,33 @@ const contactMethods = [
     title: "Live Chat",
     description: "Available 8am - 8pm",
     contact: "Start Chat"
+  }
+];
+
+const helpSections = [
+  {
+    icon: Truck,
+    title: "Shipping Information",
+    description: "Learn about our shipping options and delivery times",
+    link: "/help/shipping"
+  },
+  {
+    icon: ShieldCheck,
+    title: "Returns & Refunds",
+    description: "Information about our return policy and refund process",
+    link: "/help/returns"
+  },
+  {
+    icon: CreditCard,
+    title: "Payment Methods",
+    description: "Details about accepted payment options",
+    link: "/help/payments"
+  },
+  {
+    icon: Package,
+    title: "Product Care",
+    description: "Guidelines for product maintenance and care",
+    link: "/help/product-care"
   }
 ];
 
@@ -144,52 +172,38 @@ export default function Help() {
         </div>
       </div>
 
-      {/* Additional Help Section */}
+      {/* Additional Help Section with Flip Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <Truck className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Shipping Information</h3>
-          <p className="text-gray-600 text-sm">Learn about our shipping options and delivery times</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <ShieldCheck className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Returns & Refunds</h3>
-          <p className="text-gray-600 text-sm">Information about our return policy and refund process</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <CreditCard className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Payment Methods</h3>
-          <p className="text-gray-600 text-sm">Details about accepted payment options</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <Package className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Product Care</h3>
-          <p className="text-gray-600 text-sm">Guidelines for product maintenance and care</p>
-        </motion.div>
+        {helpSections.map((section, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 + index * 0.1 }}
+            className="flip-card h-48"
+          >
+            <div className="flip-card-inner">
+              {/* Front of card */}
+              <div className="flip-card-front bg-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center">
+                <section.icon className="w-8 h-8 text-[#f98203] mb-4" />
+                <h3 className="font-semibold mb-2">{section.title}</h3>
+                <p className="text-gray-600 text-sm">{section.description}</p>
+              </div>
+              {/* Back of card */}
+              <div className="flip-card-back bg-[#dd2581] text-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center justify-center">
+                <section.icon className="w-8 h-8 mb-4" />
+                <h3 className="font-semibold mb-4">{section.title}</h3>
+                <Link
+                  to={section.link}
+                  className="bg-[#f98203] text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#f98203] transition-colors"
+                >
+                  Learn More
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
-} 
+}
