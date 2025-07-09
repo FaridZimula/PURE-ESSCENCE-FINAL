@@ -33,25 +33,52 @@
   transform: rotateY(180deg);
 }
 
-/* Responsive image dimensions */
+/* Image dimensions based on specifications */
+.promo-image {
+  height: 400px; /* 900x400 aspect ratio */
+}
+.hero-slider {
+.feature-image-large {
+  height: 254px; /* 1001x254 aspect ratio */
+}
+  height: 354px; /* 1352x354 aspect ratio */
+.products-banner {
+  height: 400px; /* 1540x400 aspect ratio */
+}
+}
+/* Responsive adjustments for mobile */
 @media (max-width: 768px) {
   .hero-slider {
-    height: 80px !important;
+    height: 180px !important; /* Maintain aspect ratio on mobile */
   }
   
   .promo-image {
-    height: 120px !important;
-  }
-  
-  .feature-image-small {
-    height: 120px !important;
+    height: 200px !important; /* Maintain aspect ratio on mobile */
   }
   
   .feature-image-large {
-    height: 70px !important;
+    height: 130px !important; /* Maintain aspect ratio on mobile */
   }
   
   .products-banner {
-    height: 70px !important;
+    height: 200px !important; /* Maintain aspect ratio on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-slider {
+    height: 120px !important;
+  }
+  
+  .promo-image {
+    height: 150px !important;
+  }
+  
+  .feature-image-large {
+    height: 100px !important;
+  }
+  
+  .products-banner {
+    height: 150px !important;
   }
 }

@@ -90,7 +90,7 @@ export default function Products() {
   return (
     <div className="pt-32">
       {/* Full Width Hero Image */}
-      <div className="relative w-full mb-8 overflow-hidden" style={{ height: '99px' }}>
+      <div className="relative w-full mb-8 overflow-hidden products-banner">
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentPromoSlide * 100}%)` }}>
           {promoSlides.map((slide, index) => (
