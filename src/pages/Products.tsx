@@ -88,9 +88,9 @@ export default function Products() {
   };
 
   return (
-    <div className="pt-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div className="pt-32">
       {/* Full Width Hero Image */}
-      <div className="relative h-[300px] w-screen -mx-4 sm:-mx-6 lg:-mx-8 mb-8 overflow-hidden">
+      <div className="relative w-full mb-8 overflow-hidden" style={{ height: '99px' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentPromoSlide * 100}%)` }}>
           {promoSlides.map((slide, index) => (
@@ -118,15 +118,16 @@ export default function Products() {
         </div>
       </div>
 
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-3xl sm:text-4xl font-extrabold text-center text-[#dd2581] mb-8"
-      >
-        Our Products
-      </motion.h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl sm:text-4xl font-extrabold text-center text-[#dd2581] mb-8"
+        >
+          Our Products
+        </motion.h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Sidebar - Categories */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow-md p-6 sticky top-36">
@@ -260,6 +261,7 @@ export default function Products() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

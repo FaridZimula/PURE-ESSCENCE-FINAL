@@ -31,19 +31,25 @@ const contactMethods = [
     icon: <Phone className="w-6 h-6" />,
     title: "Call Us",
     description: "Available 24/7",
-    contact: "+256 123 456 789"
+    contact: "+256 754 507 334",
+    bgColor: "bg-[#dd2581]",
+    link: "tel:+256754507334"
   },
   {
     icon: <Mail className="w-6 h-6" />,
     title: "Email Us",
     description: "Response within 24 hours",
-    contact: "support@essence.com"
+    contact: "support@puressence.com",
+    bgColor: "bg-[#f98203]",
+    link: "mailto:support@puressence.com"
   },
   {
     icon: <MessageCircle className="w-6 h-6" />,
     title: "Live Chat",
     description: "Available 8am - 8pm",
-    contact: "Start Chat"
+    contact: "Start Chat",
+    bgColor: "bg-[#dd2581]",
+    link: "https://wa.me/256754507334"
   }
 ];
 
@@ -84,7 +90,7 @@ export default function Help() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
       {/* Hero Section */}
       <div className="text-center mb-12">
         <motion.h1
@@ -126,18 +132,21 @@ export default function Help() {
       {/* Contact Methods */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {contactMethods.map((method, index) => (
-          <motion.div
+          <motion.a
             key={index}
+            href={method.link}
+            target={method.link.startsWith('https') ? '_blank' : '_self'}
+            rel={method.link.startsWith('https') ? 'noopener noreferrer' : ''}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + index * 0.1 }}
-            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow"
+            className={`${method.bgColor} text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow block`}
           >
-            <div className="text-[#f98203] mb-4">{method.icon}</div>
+            <div className="mb-4">{method.icon}</div>
             <h3 className="text-lg font-semibold mb-2">{method.title}</h3>
-            <p className="text-gray-600 mb-2">{method.description}</p>
-            <p className="text-[#dd2581] font-medium">{method.contact}</p>
-          </motion.div>
+            <p className="text-white/90 mb-2">{method.description}</p>
+            <p className="font-medium">{method.contact}</p>
+          </motion.a>
         ))}
       </div>
 
@@ -190,12 +199,12 @@ export default function Help() {
                 <p className="text-gray-600 text-sm">{section.description}</p>
               </div>
               {/* Back of card */}
-              <div className="flip-card-back bg-[#dd2581] text-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center justify-center">
+              <div className={`flip-card-back ${index % 2 === 0 ? 'bg-[#dd2581]' : 'bg-[#f98203]'} text-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center justify-center`}>
                 <section.icon className="w-8 h-8 mb-4" />
                 <h3 className="font-semibold mb-4">{section.title}</h3>
                 <Link
                   to={section.link}
-                  className="bg-[#f98203] text-white px-4 py-2 rounded-full hover:bg-white hover:text-[#f98203] transition-colors"
+                  className="bg-white text-gray-800 px-4 py-2 rounded-full hover:bg-gray-100 transition-colors"
                 >
                   Learn More
                 </Link>

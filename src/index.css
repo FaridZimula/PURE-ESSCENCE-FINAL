@@ -32,3 +32,26 @@
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+/* Responsive image dimensions */
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 80px !important;
+  }
+  
+  .promo-image {
+    height: 120px !important;
+  }
+  
+  .feature-image-small {
+    height: 120px !important;
+  }
+  
+  .feature-image-large {
+    height: 70px !important;
+  }
+  
+  .products-banner {
+    height: 70px !important;
+  }
+}

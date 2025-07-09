@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <div className="pt-0">
       {/* Hero Slider - Clean images sliding left */}
-      <div className="relative h-[60vh] w-full overflow-hidden">
+      <div className="relative w-full overflow-hidden" style={{ height: '110px' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
           {slides.map((slide, index) => (
@@ -205,7 +205,8 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer"
+              className="relative rounded-2xl overflow-hidden group cursor-pointer"
+              style={{ height: '170px' }}
             >
               <img
                 src={promo.image}
@@ -282,7 +283,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+            className="relative rounded-2xl overflow-hidden group cursor-pointer"
+            style={{ height: '170px' }}
           >
             <img
               src="/images/natural/28.jpg"
@@ -294,7 +296,8 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+            className="relative rounded-2xl overflow-hidden group cursor-pointer"
+            style={{ height: '170px' }}
           >
             <img
               src="/images/natural/29.jpg"
@@ -307,7 +310,8 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="relative h-48 rounded-2xl overflow-hidden group cursor-pointer"
+          className="relative rounded-2xl overflow-hidden group cursor-pointer"
+          style={{ height: '97px' }}
         >
           <img
             src="/images/natural/30.jpg"
