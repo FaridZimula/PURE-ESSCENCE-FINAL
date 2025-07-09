@@ -205,7 +205,8 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="relative rounded-2xl overflow-hidden group cursor-pointer promo-image"
+              className="relative rounded-2xl overflow-hidden group cursor-pointer"
+              style={{ height: '400px' }}
             >
               <img
                 src={promo.image}
@@ -282,7 +283,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative rounded-2xl overflow-hidden group cursor-pointer promo-image"
+            className="relative rounded-2xl overflow-hidden group cursor-pointer"
+            style={{ height: '400px' }}
           >
             <img
               src="/images/natural/28.jpg"
@@ -294,7 +296,8 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="relative rounded-2xl overflow-hidden group cursor-pointer promo-image"
+            className="relative rounded-2xl overflow-hidden group cursor-pointer"
+            style={{ height: '400px' }}
           >
             <img
               src="/images/natural/29.jpg"
@@ -307,7 +310,8 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="relative rounded-2xl overflow-hidden group cursor-pointer feature-image-large"
+          className="relative rounded-2xl overflow-hidden group cursor-pointer"
+          style={{ height: '254px' }}
         >
           <img
             src="/images/natural/30.jpg"

@@ -15,14 +15,33 @@ const categories = {
   'Health Products': ['Wellness', 'Oral Care', 'General']
 };
 
-const promoSlides = [
-  {
-    image: "/images/natural/26.jpg"
-  },
-  {
-    image: "/images/natural/27.jpg"
-  }
-];
+// Category-specific slideshow images
+const categorySlides = {
+  'All': [
+    { image: "/images/natural/26.jpg" },
+    { image: "/images/natural/27.jpg" }
+  ],
+  'Skin Products': [
+    { image: "/images/natural/23.jpg" },
+    { image: "/images/natural/25.jpg" }
+  ],
+  'Lotions': [
+    { image: "/images/natural/24.jpg" },
+    { image: "/images/natural/31.jpg" }
+  ],
+  'Bedroom Products': [
+    { image: "/images/natural/17.jpg" },
+    { image: "/images/natural/18.jpg" }
+  ],
+  'Tablets': [
+    { image: "/images/natural/16.jpg" },
+    { image: "/images/natural/19.jpg" }
+  ],
+  'Health Products': [
+    { image: "/images/natural/15.jpg" },
+    { image: "/images/natural/20.jpg" }
+  ]
+};
 
 export default function Products() {
   const [activeTab, setActiveTab] = useState<'natural' | 'classic'>('natural');
@@ -34,13 +53,21 @@ export default function Products() {
 
   const allProducts = activeTab === 'natural' ? naturalEssenceProducts : classicProducts;
   
+  // Get current slideshow images based on selected category
+  const currentSlides = categorySlides[selectedCategory] || categorySlides['All'];
+  
   // Auto-slide for promo images
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentPromoSlide((prev) => (prev + 1) % promoSlides.length);
+      setCurrentPromoSlide((prev) => (prev + 1) % currentSlides.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [currentSlides.length]);
+
+  // Reset slide when category changes
+  useEffect(() => {
+    setCurrentPromoSlide(0);
+  }, [selectedCategory]);
 
   // Filter products by category
   const filteredProducts = selectedCategory === 'All' 
@@ -90,10 +117,10 @@ export default function Products() {
   return (
     <div className="pt-32">
       {/* Full Width Hero Image */}
-      <div className="relative w-full mb-8 overflow-hidden products-banner">
+      <div className="relative w-full mb-8 overflow-hidden" style={{ height: '354px' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentPromoSlide * 100}%)` }}>
-          {promoSlides.map((slide, index) => (
+          {currentSlides.map((slide, index) => (
             <div key={index} className="min-w-full h-full">
               <img
                 src={slide.image}
@@ -106,7 +133,7 @@ export default function Products() {
         
         {/* Slide indicators */}
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {promoSlides.map((_, index) => (
+          {currentSlides.map((_, index) => (
             <button
               key={index}
               className={`w-3 h-3 rounded-full transition-colors ${
@@ -198,20 +225,20 @@ export default function Products() {
           </div>
           
           {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {filteredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow h-[400px] flex flex-col"
+                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col"
               >
-                <div className="relative h-48">
+                <div className="relative aspect-square">
                   <img 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-full object-cover cursor-pointer"
+                    className="w-full h-full object-cover cursor-pointer rounded-t-xl"
                     onClick={() => navigate(`/shop-detail/${product.id}`)}
                   />
                   <div className="absolute top-4 left-4">
@@ -220,21 +247,21 @@ export default function Products() {
                     </span>
                   </div>
                 </div>
-                <div className="p-6 flex flex-col flex-1">
-                  <h3 
-                    className="text-xl font-bold text-gray-800 mb-2 cursor-pointer hover:text-[#dd2581] transition-colors"
+                <div className="p-4 flex flex-col flex-1">
+                  <h3
+                    className="text-lg font-bold text-gray-800 mb-2 cursor-pointer hover:text-[#dd2581] transition-colors line-clamp-2"
                     onClick={() => navigate(`/shop-detail/${product.id}`)}
                   >
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 mb-4 text-sm flex-1">{product.description}</p>
+                  <p className="text-gray-600 mb-3 text-sm flex-1 line-clamp-2">{product.description}</p>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-2xl font-bold text-[#dd2581]">
+                    <span className="text-xl font-bold text-[#dd2581]">
                       ${(product.price * 0.00027).toFixed(2)}
                     </span>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
+                      className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 text-sm ${
                         addedToCart[product.id] 
                           ? 'bg-[#dd2581] text-white' 
                           : 'bg-[#dd2581] text-white hover:bg-[#f98203]'
