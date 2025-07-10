@@ -32,3 +32,14 @@
 .flip-card-back {
   transform: rotateY(180deg);
 }
+
+/* Responsive image styles */
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 200px !important;
+  }
+  
+  .hero-slider img {
+    height: 200px !important;
+  }
+}

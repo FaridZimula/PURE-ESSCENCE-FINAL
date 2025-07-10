@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <div className="pt-0">
       {/* Hero Slider - Clean images sliding left */}
-      <div className="relative w-full overflow-hidden hero-slider">
+      <div className="relative w-full overflow-hidden" style={{ height: '354px' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
           {slides.map((slide, index) => (
@@ -177,6 +177,7 @@ export default function Home() {
                 src={slide.image}
                 alt={`Slide ${index + 1}`}
                 className="w-full h-full object-cover"
+                style={{ width: '1352px', height: '354px', maxWidth: '100%' }}
               />
             </div>
           ))}
@@ -206,12 +207,12 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
               className="relative rounded-2xl overflow-hidden group cursor-pointer"
-              style={{ height: '400px' }}
             >
               <img
                 src={promo.image}
                 alt={`Promo ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                style={{ width: '900px', height: '400px', maxWidth: '100%' }}
               />
             </motion.div>
           ))}
@@ -219,12 +220,12 @@ export default function Home() {
       </section>
 
       {/* Shop By Category Section */}
-      <section className="container mx-auto py-16">
+      <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-[#dd2581] text-center flex-1">Shop by Category</h2>
           <Link 
             to="/products" 
-            className="text-gray-600 hover:text-[#dd2581] transition-colors border border-gray-300 px-4 py-2 rounded-full"
+            className="hidden md:block text-gray-600 hover:text-[#dd2581] transition-colors border border-gray-300 px-4 py-2 rounded-full"
           >
             View More
           </Link>
@@ -232,7 +233,7 @@ export default function Home() {
         
         <div className="relative">
           <button
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2 hover:bg-[#dd2581] hover:text-white"
+            className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2 hover:bg-[#dd2581] hover:text-white"
             onClick={() => scrollCarousel(categoryRef, -1)}
             aria-label="Scroll left"
           >
@@ -241,25 +242,25 @@ export default function Home() {
           
           <div
             ref={categoryRef}
-            className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
+            className="flex gap-4 md:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
             style={{ scrollSnapType: 'x mandatory' }}
           >
             {categoryProducts.map((item, idx) => (
               <div
                 key={idx}
-                className="min-w-[280px] max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden snap-center hover:shadow-xl transition-shadow"
+                className="min-w-[250px] md:min-w-[280px] max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden snap-center hover:shadow-xl transition-shadow flex-shrink-0"
               >
-                <div className="relative h-48">
+                <div className="relative">
                   <img
                     src={item.image}
                     alt={item.category}
-                    className="w-full h-full object-cover"
+                    className="w-full object-cover aspect-square"
                   />
                 </div>
-                <div className="p-6 text-center">
-                  <h3 className="text-lg font-bold text-[#dd2581] mb-2">{item.category}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{item.product.name}</p>
-                  <p className="text-[#f98203] font-bold text-lg">
+                <div className="p-4 md:p-6 text-center">
+                  <h3 className="text-base md:text-lg font-bold text-[#dd2581] mb-2">{item.category}</h3>
+                  <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">{item.product.name}</p>
+                  <p className="text-[#f98203] font-bold text-base md:text-lg">
                     ${(item.product.price * 0.00027).toFixed(2)}
                   </p>
                 </div>
@@ -268,12 +269,22 @@ export default function Home() {
           </div>
           
           <button
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2 hover:bg-[#dd2581] hover:text-white"
+            className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow rounded-full p-2 hover:bg-[#dd2581] hover:text-white"
             onClick={() => scrollCarousel(categoryRef, 1)}
             aria-label="Scroll right"
           >
             &#8594;
           </button>
+        </div>
+        
+        {/* Mobile View More Button */}
+        <div className="md:hidden text-center mt-6">
+          <Link 
+            to="/products" 
+            className="text-gray-600 hover:text-[#dd2581] transition-colors border border-gray-300 px-6 py-2 rounded-full inline-block"
+          >
+            View More
+          </Link>
         </div>
       </section>
 
@@ -284,12 +295,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="relative rounded-2xl overflow-hidden group cursor-pointer"
-            style={{ height: '400px' }}
           >
             <img
               src="/images/natural/28.jpg"
               alt="Feature 1"
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              style={{ width: '900px', height: '400px', maxWidth: '100%' }}
             />
           </motion.div>
           <motion.div
@@ -297,12 +308,12 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="relative rounded-2xl overflow-hidden group cursor-pointer"
-            style={{ height: '400px' }}
           >
             <img
               src="/images/natural/29.jpg"
               alt="Feature 2"
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
+              style={{ width: '900px', height: '400px', maxWidth: '100%' }}
             />
           </motion.div>
         </div>
@@ -311,12 +322,12 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="relative rounded-2xl overflow-hidden group cursor-pointer"
-          style={{ height: '254px' }}
         >
           <img
             src="/images/natural/30.jpg"
             alt="Feature 3"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            style={{ width: '1001px', height: '254px', maxWidth: '100%' }}
           />
         </motion.div>
       </section>

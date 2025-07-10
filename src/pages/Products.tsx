@@ -225,43 +225,43 @@ export default function Products() {
           </div>
           
           {/* Products Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             {filteredProducts.map((product, index) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col"
+                className="bg-white rounded-lg md:rounded-xl shadow-md md:shadow-lg overflow-hidden hover:shadow-xl transition-shadow flex flex-col"
               >
-                <div className="relative aspect-square">
+                <div className="relative">
                   <img 
                     src={product.image} 
                     alt={product.name} 
-                    className="w-full h-full object-cover cursor-pointer rounded-t-xl"
+                    className="w-full object-cover cursor-pointer aspect-square"
                     onClick={() => navigate(`/shop-detail/${product.id}`)}
                   />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-[#f98203] text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  <div className="absolute top-2 md:top-4 left-2 md:left-4">
+                    <span className="bg-[#f98203] text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">
                       {product.category}
                     </span>
                   </div>
                 </div>
-                <div className="p-4 flex flex-col flex-1">
+                <div className="p-3 md:p-4 flex flex-col flex-1">
                   <h3
-                    className="text-lg font-bold text-gray-800 mb-2 cursor-pointer hover:text-[#dd2581] transition-colors line-clamp-2"
+                    className="text-sm md:text-lg font-bold text-gray-800 mb-2 cursor-pointer hover:text-[#dd2581] transition-colors line-clamp-2"
                     onClick={() => navigate(`/shop-detail/${product.id}`)}
                   >
                     {product.name}
                   </h3>
-                  <p className="text-gray-600 mb-3 text-sm flex-1 line-clamp-2">{product.description}</p>
+                  <p className="text-gray-600 mb-2 md:mb-3 text-xs md:text-sm flex-1 line-clamp-2">{product.description}</p>
                   <div className="flex items-center justify-between mt-auto">
-                    <span className="text-xl font-bold text-[#dd2581]">
+                    <span className="text-lg md:text-xl font-bold text-[#dd2581]">
                       ${(product.price * 0.00027).toFixed(2)}
                     </span>
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 text-sm ${
+                      className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full font-semibold transition-all duration-300 text-xs md:text-sm ${
                         addedToCart[product.id] 
                           ? 'bg-[#dd2581] text-white' 
                           : 'bg-[#dd2581] text-white hover:bg-[#f98203]'
@@ -278,10 +278,10 @@ export default function Products() {
           {/* No products message */}
           {filteredProducts.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No products found in this category.</p>
+              <p className="text-gray-500 text-base md:text-lg">No products found in this category.</p>
               <button
                 onClick={() => setSelectedCategory('All')}
-                className="mt-4 px-6 py-2 bg-[#f98203] text-white rounded-full hover:bg-[#dd2581] transition-colors"
+                className="mt-4 px-4 md:px-6 py-2 bg-[#f98203] text-white rounded-full hover:bg-[#dd2581] transition-colors text-sm md:text-base"
               >
                 View All Products
               </button>
