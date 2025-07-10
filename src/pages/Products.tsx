@@ -117,7 +117,7 @@ export default function Products() {
   return (
     <div className="pt-32">
       {/* Full Width Hero Image */}
-      <div className="relative w-full mb-8 overflow-hidden" style={{ height: '354px' }}>
+      <div className="relative w-full mb-8 overflow-hidden" style={{ aspectRatio: '1352/354' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentPromoSlide * 100}%)` }}>
           {currentSlides.map((slide, index) => (
@@ -126,6 +126,7 @@ export default function Products() {
                 src={slide.image}
                 alt={`Promo ${index + 1}`}
                 className="w-full h-full object-cover"
+                style={{ aspectRatio: '1352/354' }}
               />
             </div>
           ))}

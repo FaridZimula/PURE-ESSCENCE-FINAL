@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <div className="pt-0">
       {/* Hero Slider - Clean images sliding left */}
-      <div className="relative w-full overflow-hidden hero-slider" style={{ height: '354px' }}>
+      <div className="relative w-full overflow-hidden" style={{ aspectRatio: '1352/354' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
           {slides.map((slide, index) => (
@@ -177,6 +177,7 @@ export default function Home() {
                 src={slide.image}
                 alt={`Slide ${index + 1}`}
                 className="w-full h-full object-cover"
+                style={{ aspectRatio: '1352/354' }}
               />
             </div>
           ))}
@@ -206,12 +207,13 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
               className="relative rounded-2xl overflow-hidden group cursor-pointer"
+              style={{ aspectRatio: '900/400' }}
             >
               <img
                 src={promo.image}
                 alt={`Promo ${index + 1}`}
-                className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                style={{ width: '900px', height: '400px', maxWidth: '100%' }}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                style={{ aspectRatio: '900/400' }}
               />
             </motion.div>
           ))}
@@ -294,12 +296,13 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="relative rounded-2xl overflow-hidden group cursor-pointer"
+            style={{ aspectRatio: '900/400' }}
           >
             <img
               src="/images/natural/28.jpg"
               alt="Feature 1"
-              className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
-              style={{ width: '900px', height: '400px', maxWidth: '100%' }}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              style={{ aspectRatio: '900/400' }}
             />
           </motion.div>
           <motion.div
@@ -307,12 +310,13 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="relative rounded-2xl overflow-hidden group cursor-pointer"
+            style={{ aspectRatio: '900/400' }}
           >
             <img
               src="/images/natural/29.jpg"
               alt="Feature 2"
-              className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
-              style={{ width: '900px', height: '400px', maxWidth: '100%' }}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              style={{ aspectRatio: '900/400' }}
             />
           </motion.div>
         </div>
@@ -321,12 +325,13 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
           className="relative rounded-2xl overflow-hidden group cursor-pointer"
+          style={{ aspectRatio: '1001/254' }}
         >
           <img
             src="/images/natural/30.jpg"
             alt="Feature 3"
-            className="w-full object-cover transition-transform duration-500 group-hover:scale-110"
-            style={{ width: '1001px', height: '254px', maxWidth: '100%' }}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            style={{ aspectRatio: '1001/254' }}
           />
         </motion.div>
       </section>
