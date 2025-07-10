@@ -168,7 +168,7 @@ export default function Home() {
   return (
     <div className="pt-0">
       {/* Hero Slider - Clean images sliding left */}
-      <div className="relative w-full overflow-hidden" style={{ height: '354px' }}>
+      <div className="relative w-full overflow-hidden hero-slider" style={{ height: '354px' }}>
         <div className="flex transition-transform duration-1000 ease-in-out h-full"
              style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
           {slides.map((slide, index) => (
@@ -177,7 +177,6 @@ export default function Home() {
                 src={slide.image}
                 alt={`Slide ${index + 1}`}
                 className="w-full h-full object-cover"
-                style={{ width: '1352px', height: '354px', maxWidth: '100%' }}
               />
             </div>
           ))}
@@ -242,25 +241,25 @@ export default function Home() {
           
           <div
             ref={categoryRef}
-            className="flex gap-4 md:gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
+            className="flex gap-3 md:gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
             style={{ scrollSnapType: 'x mandatory' }}
           >
             {categoryProducts.map((item, idx) => (
               <div
                 key={idx}
-                className="min-w-[250px] md:min-w-[280px] max-w-sm bg-white rounded-2xl shadow-lg overflow-hidden snap-center hover:shadow-xl transition-shadow flex-shrink-0"
+                className="min-w-[180px] md:min-w-[220px] max-w-xs bg-white rounded-xl shadow-md overflow-hidden snap-center hover:shadow-lg transition-shadow flex-shrink-0"
               >
-                <div className="relative">
+                <div className="relative h-32 md:h-40">
                   <img
                     src={item.image}
                     alt={item.category}
-                    className="w-full object-cover aspect-square"
+                    className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-4 md:p-6 text-center">
-                  <h3 className="text-base md:text-lg font-bold text-[#dd2581] mb-2">{item.category}</h3>
-                  <p className="text-gray-600 text-xs md:text-sm mb-3 md:mb-4">{item.product.name}</p>
-                  <p className="text-[#f98203] font-bold text-base md:text-lg">
+                <div className="p-3 md:p-4 text-center">
+                  <h3 className="text-sm md:text-base font-bold text-[#dd2581] mb-1">{item.category}</h3>
+                  <p className="text-gray-600 text-xs mb-2 line-clamp-2">{item.product.name}</p>
+                  <p className="text-[#f98203] font-bold text-sm md:text-base">
                     ${(item.product.price * 0.00027).toFixed(2)}
                   </p>
                 </div>

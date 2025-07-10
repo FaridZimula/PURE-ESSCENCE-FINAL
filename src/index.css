@@ -36,10 +36,31 @@
 /* Responsive image styles */
 @media (max-width: 768px) {
   .hero-slider {
-    height: 200px !important;
+    height: 180px !important;
   }
   
   .hero-slider img {
-    height: 200px !important;
+    height: 180px !important;
+  }
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Ensure rectangular aspect ratio for hero slider */
+.hero-slider {
+  aspect-ratio: 1352 / 354;
+  max-height: 354px;
+}
+
+@media (max-width: 768px) {
+  .hero-slider {
+    aspect-ratio: 16 / 9;
+    max-height: 180px;
   }
 }
