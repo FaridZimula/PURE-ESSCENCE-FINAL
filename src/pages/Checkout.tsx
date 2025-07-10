@@ -13,16 +13,44 @@ export default function Checkout() {
     phone: '',
     address: '',
     city: '',
-    paymentMethod: 'credit_card'
+    paymentMethod: 'mobile_money'
   });
 
   const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const totalUSD = (total * 0.00027).toFixed(2);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    // Navigate to success page or handle payment
+    
+    // Create WhatsApp message
+    const orderDetails = cartItems.map(item => 
+      `${item.name} - Quantity: ${item.quantity} - Price: $${((item.price * 0.00027) * item.quantity).toFixed(2)}`
+    ).join('\n');
+    
+    const message = `
+🛍️ NEW ORDER DETAILS
+
+👤 Customer Information:
+Name: ${formData.fullName}
+Email: ${formData.email}
+Phone: ${formData.phone}
+
+📍 Delivery Address:
+${formData.address}, ${formData.city}
+
+📦 Products Ordered:
+${orderDetails}
+
+💰 Total Amount: $${totalUSD}
+💳 Payment Method: ${formData.paymentMethod.replace('_', ' ').toUpperCase()}
+
+⏰ Delivery Time: Within 24 hours from order confirmation
+
+Please confirm this order. Thank you!
+    `;
+
+    const whatsappUrl = `https://wa.me/256754507334?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -78,7 +106,7 @@ export default function Checkout() {
                   <p className="text-gray-600">Quantity: {item.quantity}</p>
                 </div>
                 <p className="font-semibold text-[#f98203]">
-                  UGX {(item.price * item.quantity).toLocaleString()}
+                  ${((item.price * 0.00027) * item.quantity).toFixed(2)}
                 </p>
               </div>
             ))}
@@ -86,7 +114,7 @@ export default function Checkout() {
           <div className="border-t border-gray-200 mt-6 pt-6">
             <div className="flex justify-between mb-2">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-semibold">UGX {total.toLocaleString()}</span>
+              <span className="font-semibold">${totalUSD}</span>
             </div>
             <div className="flex justify-between mb-2">
               <span className="text-gray-600">Shipping</span>
@@ -94,8 +122,19 @@ export default function Checkout() {
             </div>
             <div className="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-gray-200">
               <span>Total</span>
-              <span className="text-[#dd2581]">UGX {total.toLocaleString()}</span>
+              <span className="text-[#dd2581]">${totalUSD}</span>
             </div>
+          </div>
+          
+          {/* Delivery Notice */}
+          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center">
+              <Truck className="w-5 h-5 text-green-600 mr-2" />
+              <span className="text-green-800 font-semibold">Fast Delivery</span>
+            </div>
+            <p className="text-green-700 text-sm mt-1">
+              Your order will be delivered within 24 hours from confirmation.
+            </p>
           </div>
         </motion.div>
 
@@ -115,7 +154,7 @@ export default function Checkout() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name
+                    Full Name *
                   </label>
                   <input
                     type="text"
@@ -129,7 +168,7 @@ export default function Checkout() {
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
+                    Email *
                   </label>
                   <input
                     type="email"
@@ -141,9 +180,9 @@ export default function Checkout() {
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f98203]"
                   />
                 </div>
-                <div>
+                <div className="sm:col-span-2">
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                    Phone Number
+                    Phone Number *
                   </label>
                   <input
                     type="tel"
@@ -162,12 +201,12 @@ export default function Checkout() {
             <div>
               <h3 className="text-lg font-semibold mb-4 flex items-center">
                 <MapPin className="w-5 h-5 mr-2 text-[#f98203]" />
-                Shipping Address
+                Delivery Address
               </h3>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                    Address
+                    Street Address *
                   </label>
                   <input
                     type="text"
@@ -176,12 +215,13 @@ export default function Checkout() {
                     value={formData.address}
                     onChange={handleInputChange}
                     required
+                    placeholder="Enter your full address"
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#f98203]"
                   />
                 </div>
                 <div>
                   <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-                    City
+                    City *
                   </label>
                   <input
                     type="text"
@@ -208,17 +248,6 @@ export default function Checkout() {
                     <input
                       type="radio"
                       name="paymentMethod"
-                      value="credit_card"
-                      checked={formData.paymentMethod === 'credit_card'}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-[#f98203] focus:ring-[#f98203]"
-                    />
-                    <span className="ml-3">Credit Card</span>
-                  </label>
-                  <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
                       value="mobile_money"
                       checked={formData.paymentMethod === 'mobile_money'}
                       onChange={handleInputChange}
@@ -230,12 +259,12 @@ export default function Checkout() {
                     <input
                       type="radio"
                       name="paymentMethod"
-                      value="pay_on_delivery"
-                      checked={formData.paymentMethod === 'pay_on_delivery'}
+                      value="cash_on_delivery"
+                      checked={formData.paymentMethod === 'cash_on_delivery'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-[#f98203] focus:ring-[#f98203]"
                     />
-                    <span className="ml-3">Pay on Delivery</span>
+                    <span className="ml-3">Cash on Delivery</span>
                   </label>
                 </div>
               </div>
@@ -245,7 +274,7 @@ export default function Checkout() {
               type="submit"
               className="w-full bg-[#dd2581] text-white py-3 rounded-lg font-semibold hover:bg-[#f98203] transition-colors"
             >
-              Place Order
+              Place Order via WhatsApp
             </button>
           </form>
         </motion.div>

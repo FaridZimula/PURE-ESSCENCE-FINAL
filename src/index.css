@@ -1,3 +1,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Flip Card Styles */
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Responsive image styles */
+@media (max-width: 768px) {
+  .hero-slider {
+    height: 180px !important;
+  }
+  
+  .hero-slider img {
+    height: 180px !important;
+  }
+}
+
+/* Line clamp utility */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Ensure rectangular aspect ratio for hero slider */
+.hero-slider {
+  aspect-ratio: 1352 / 354;
+  max-height: 354px;
+}
+
+@media (max-width: 768px) {
+  .hero-slider {
+    aspect-ratio: 16 / 9;
+    max-height: 180px;
+  }
+}

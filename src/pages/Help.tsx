@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Phone, Mail, MessageCircle, Truck, ShieldCheck, CreditCard, Package } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const faqs = [
   {
@@ -30,19 +31,52 @@ const contactMethods = [
     icon: <Phone className="w-6 h-6" />,
     title: "Call Us",
     description: "Available 24/7",
-    contact: "+256 123 456 789"
+    contact: "+256 754 507 334",
+    bgColor: "bg-[#dd2581]",
+    link: "tel:+256754507334"
   },
   {
     icon: <Mail className="w-6 h-6" />,
     title: "Email Us",
     description: "Response within 24 hours",
-    contact: "support@essence.com"
+    contact: "support@puressence.com",
+    bgColor: "bg-[#f98203]",
+    link: "mailto:support@puressence.com"
   },
   {
     icon: <MessageCircle className="w-6 h-6" />,
     title: "Live Chat",
     description: "Available 8am - 8pm",
-    contact: "Start Chat"
+    contact: "Start Chat",
+    bgColor: "bg-[#dd2581]",
+    link: "https://wa.me/256754507334"
+  }
+];
+
+const helpSections = [
+  {
+    icon: Truck,
+    title: "Shipping Information",
+    description: "Learn about our shipping options and delivery times",
+    link: "/help/shipping"
+  },
+  {
+    icon: ShieldCheck,
+    title: "Returns & Refunds",
+    description: "Information about our return policy and refund process",
+    link: "/help/returns"
+  },
+  {
+    icon: CreditCard,
+    title: "Payment Methods",
+    description: "Details about accepted payment options",
+    link: "/help/payments"
+  },
+  {
+    icon: Package,
+    title: "Product Care",
+    description: "Guidelines for product maintenance and care",
+    link: "/help/product-care"
   }
 ];
 
@@ -56,7 +90,7 @@ export default function Help() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-32">
       {/* Hero Section */}
       <div className="text-center mb-12">
         <motion.h1
@@ -98,18 +132,21 @@ export default function Help() {
       {/* Contact Methods */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {contactMethods.map((method, index) => (
-          <motion.div
+          <motion.a
             key={index}
+            href={method.link}
+            target={method.link.startsWith('https') ? '_blank' : '_self'}
+            rel={method.link.startsWith('https') ? 'noopener noreferrer' : ''}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 + index * 0.1 }}
-            className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow"
+            className={`${method.bgColor} text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow block`}
           >
-            <div className="text-[#f98203] mb-4">{method.icon}</div>
+            <div className="mb-4">{method.icon}</div>
             <h3 className="text-lg font-semibold mb-2">{method.title}</h3>
-            <p className="text-gray-600 mb-2">{method.description}</p>
-            <p className="text-[#dd2581] font-medium">{method.contact}</p>
-          </motion.div>
+            <p className="text-white/90 mb-2">{method.description}</p>
+            <p className="font-medium">{method.contact}</p>
+          </motion.a>
         ))}
       </div>
 
@@ -144,52 +181,38 @@ export default function Help() {
         </div>
       </div>
 
-      {/* Additional Help Section */}
+      {/* Additional Help Section with Flip Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <Truck className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Shipping Information</h3>
-          <p className="text-gray-600 text-sm">Learn about our shipping options and delivery times</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <ShieldCheck className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Returns & Refunds</h3>
-          <p className="text-gray-600 text-sm">Information about our return policy and refund process</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <CreditCard className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Payment Methods</h3>
-          <p className="text-gray-600 text-sm">Details about accepted payment options</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="bg-white rounded-xl p-6 shadow-lg"
-        >
-          <Package className="w-8 h-8 text-[#f98203] mb-4" />
-          <h3 className="font-semibold mb-2">Product Care</h3>
-          <p className="text-gray-600 text-sm">Guidelines for product maintenance and care</p>
-        </motion.div>
+        {helpSections.map((section, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 + index * 0.1 }}
+            className="flip-card h-48"
+          >
+            <div className="flip-card-inner">
+              {/* Front of card */}
+              <div className="flip-card-front bg-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center">
+                <section.icon className="w-8 h-8 text-[#f98203] mb-4" />
+                <h3 className="font-semibold mb-2">{section.title}</h3>
+                <p className="text-gray-600 text-sm">{section.description}</p>
+              </div>
+              {/* Back of card */}
+              <div className={`flip-card-back ${index % 2 === 0 ? 'bg-[#dd2581]' : 'bg-[#f98203]'} text-white rounded-xl p-6 shadow-lg flex flex-col items-center text-center justify-center`}>
+                <section.icon className="w-8 h-8 mb-4" />
+                <h3 className="font-semibold mb-4">{section.title}</h3>
+                <Link
+                  to={section.link}
+                  className="bg-white text-gray-800 px-4 py-2 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  Learn More
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );
-} 
+}
